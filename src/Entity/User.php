@@ -226,22 +226,22 @@ class User implements UserInterface
         return $this->photos;
     }
 
-    public function addPhotos(Photo $photoss): self
+    public function addPhotos(Photo $photos): self
     {
-        if (!$this->photos->contains($photoss)) {
-            $this->photos[] = $photoss;
-            $photoss->setUser($this);
+        if (!$this->photos->contains($photos)) {
+            $this->photos[] = $photos;
+            $photos->setUser($this);
         }
 
         return $this;
     }
 
-    public function removePhotos(Photo $photoss): self
+    public function removePhotos(Photo $photos): self
     {
-        if ($this->photos->removeElement($photoss)) {
+        if ($this->photos->removeElement($photos)) {
             // set the owning side to null (unless already changed)
-            if ($photoss->getUser() === $this) {
-                $photoss->setUser(null);
+            if ($photos->getUser() === $this) {
+                $photos->setUser(null);
             }
         }
 
