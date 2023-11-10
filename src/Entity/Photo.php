@@ -30,7 +30,7 @@ class Photo
     private $url;
 
     /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="photoss")
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="photos")
      * @ORM\JoinColumn(nullable=false)
      */
     private $user;
