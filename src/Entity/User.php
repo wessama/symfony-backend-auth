@@ -3,12 +3,12 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
-use DateTime;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
@@ -41,11 +41,15 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=25)
+     * @Assert\NotBlank
+     * @Assert\Length(min=2, max=25)
      */
     private $firstName;
 
     /**
      * @ORM\Column(type="string", length=25)
+     * @Assert\NotBlank
+     * @Assert\Length(min=2, max=25)
      */
     private $lastName;
 
@@ -60,7 +64,8 @@ class User implements UserInterface
     private $avatar;
 
     /**
-     * @ORM\OneToMany(targetEntity=Photo::class, mappedBy="user", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity=Photo::class, mappedBy="user", orphanRemoval=true, cascade={"persist"})
+     * @Assert\Count(min=4)
      */
     private $photos;
 
@@ -226,22 +231,22 @@ class User implements UserInterface
         return $this->photos;
     }
 
-    public function addPhotos(Photo $photos): self
+    public function addPhoto(Photo $photo): self
     {
-        if (!$this->photos->contains($photos)) {
-            $this->photos[] = $photos;
-            $photos->setUser($this);
+        if (! $this->photos->contains($photo)) {
+            $this->photos[] = $photo;
+            $photo->setUser($this);
         }
 
         return $this;
     }
 
-    public function removePhotos(Photo $photos): self
+    public function removePhoto(Photo $photo): self
     {
-        if ($this->photos->removeElement($photos)) {
+        if ($this->photos->removeElement($photo)) {
             // set the owning side to null (unless already changed)
-            if ($photos->getUser() === $this) {
-                $photos->setUser(null);
+            if ($photo->getUser() === $this) {
+                $photo->setUser(null);
             }
         }
 
