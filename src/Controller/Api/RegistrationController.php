@@ -55,6 +55,7 @@ class RegistrationController extends AbstractController
                     $user->addPhoto($photo);
                 }
 
+                // Persist the user and by consequence the photos collection
                 $entityManager->getRepository(User::class)->add($user);
 
                 return new JsonResponse(['status' => 'User registered successfully'], Response::HTTP_CREATED);
