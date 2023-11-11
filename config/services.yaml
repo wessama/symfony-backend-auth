@@ -4,6 +4,11 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
+    aws.s3_bucket: '%env(AWS_S3_BUCKET)%'
+    aws.region: '%env(AWS_S3_REGION)%'
+    aws.credentials:
+        key: '%env(AWS_KEY)%'
+        secret: '%env(AWS_SECRET)%'
 
 services:
     # default configuration for services in *this* file
@@ -22,9 +27,15 @@ services:
 
     # controllers are imported separately to make sure services can be injected
     # as action arguments even if you don't extend any base controller class
-    App\Controller\:
-        resource: '../src/Controller/'
+    App\Controller\Api\:
+        resource: '../src/Controller/Api'
         tags: ['controller.service_arguments']
+
+    Aws\S3\S3Client:
+        arguments:
+            - version: 'latest'
+              region: '%aws.region%'
+              credentials: '%aws.credentials%'
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
