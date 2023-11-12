@@ -82,9 +82,9 @@ class User extends BaseEntity implements UserInterface
      */
     private $active;
 
-    private const STATUS_ACTIVE = 1;
+    public const STATUS_ACTIVE = 1;
 
-    private const STATUS_INACTIVE = 0;
+    public const STATUS_INACTIVE = 0;
 
     public function __construct()
     {
