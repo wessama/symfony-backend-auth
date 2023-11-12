@@ -8,6 +8,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Asset\Package;
+use Symfony\Component\Asset\VersionStrategy\EmptyVersionStrategy;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -26,19 +28,19 @@ class User extends BaseEntity implements UserInterface
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
-    private $id;
+    private int $id;
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
      * @Assert\NotBlank
      * @Assert\Email
      */
-    private $email;
+    private string $email;
 
     /**
      * @ORM\Column(type="json")
      */
-    private $roles = [];
+    private array $roles = [];
 
     /**
      * @ORM\Column(type="string")
@@ -46,41 +48,41 @@ class User extends BaseEntity implements UserInterface
      * @Assert\Length(min=5, max=50)
      * @Assert\Regex(pattern="/\d/", message="Your password must contain at least one number")
      */
-    private $password;
+    private string $password;
 
     /**
      * @ORM\Column(type="string", length=25)
      * @Assert\NotBlank
      * @Assert\Length(min=2, max=25)
      */
-    private $firstName;
+    private string $firstName;
 
     /**
      * @ORM\Column(type="string", length=25)
      * @Assert\NotBlank
      * @Assert\Length(min=2, max=25)
      */
-    private $lastName;
+    private string $lastName;
 
     /**
      * @ORM\Column(type="string", length=55)
      */
-    private $fullName;
+    private string $fullName;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $avatar;
+    private ?string $avatar;
 
     /**
      * @ORM\OneToMany(targetEntity=Photo::class, mappedBy="user", orphanRemoval=true, cascade={"persist"})
      */
-    private $photos;
+    private ArrayCollection $photos;
 
     /**
      * @ORM\Column(type="boolean")
      */
-    private $active;
+    private int $active;
 
     public const STATUS_ACTIVE = 1;
 
@@ -227,6 +229,18 @@ class User extends BaseEntity implements UserInterface
         $this->avatar = $avatar;
 
         return $this;
+    }
+
+    /**
+     * @ORM\PrePersist
+     */
+    public function setDefaultAvatar(): void
+    {
+        if (empty($this->avatar)) {
+            // Set the path to the default avatar image file
+            $package = new Package(new EmptyVersionStrategy());
+            $this->setAvatar($package->getUrl('uploads/default.jpeg'));
+        }
     }
 
     /**

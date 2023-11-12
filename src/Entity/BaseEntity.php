@@ -14,12 +14,12 @@ abstract class BaseEntity
     /**
      * @ORM\Column(type="datetime_immutable")
      */
-    protected $createdAt;
+    protected DateTimeImmutable $createdAt;
 
     /**
      * @ORM\Column(type="datetime_immutable", nullable=true)
      */
-    protected $updatedAt;
+    protected ?DateTimeImmutable $updatedAt;
 
     public function getCreatedAt(): ?DateTimeImmutable
     {

@@ -16,23 +16,23 @@ class Photo extends BaseEntity
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
-    private $id;
+    private int $id;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $name;
+    private string $name;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $url;
+    private string $url;
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="photos")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $user;
+    private User $user;
 
     public function getId(): ?int
     {
