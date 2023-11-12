@@ -7,7 +7,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class SecurityController extends AbstractController
+class AuthController extends AbstractController
 {
     /**
      * @Route("/login", name="login", methods={"POST"})
