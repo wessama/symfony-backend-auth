@@ -25,7 +25,7 @@ class User extends BaseEntity implements UserInterface
     /**
      * @ORM\Column(type="string", length=180, unique=true)
      * @Assert\NotBlank
-     * @Assert\Email(strict=true)
+     * @Assert\Email
      */
     private $email;
 
@@ -37,7 +37,8 @@ class User extends BaseEntity implements UserInterface
     /**
      * @ORM\Column(type="string")
      * @Assert\NotBlank
-     * @Assert\Length(min=6, max=50)
+     * @Assert\Length(min=5, max=50)
+     * @Assert\Regex(pattern="/\d/", message="Your password must contain at least one number")
      */
     private $password;
 
@@ -67,7 +68,6 @@ class User extends BaseEntity implements UserInterface
 
     /**
      * @ORM\OneToMany(targetEntity=Photo::class, mappedBy="user", orphanRemoval=true, cascade={"persist"})
-     * @Assert\Count(min=4)
      */
     private $photos;
 

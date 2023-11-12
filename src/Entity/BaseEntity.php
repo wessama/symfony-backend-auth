@@ -5,17 +5,21 @@ namespace App\Entity;
 use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 
+/**
+ * @ORM\MappedSuperclass()
+ * @ORM\HasLifecycleCallbacks()
+ */
 abstract class BaseEntity
 {
     /**
      * @ORM\Column(type="datetime_immutable")
      */
-    private $createdAt;
+    protected $createdAt;
 
     /**
      * @ORM\Column(type="datetime_immutable", nullable=true)
      */
-    private $updatedAt;
+    protected $updatedAt;
 
     public function getCreatedAt(): ?DateTimeImmutable
     {
