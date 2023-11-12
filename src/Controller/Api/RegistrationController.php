@@ -7,6 +7,7 @@ use App\Entity\User;
 use App\Form\RegistrationFormType;
 use Aws\S3\S3Client;
 use Exception;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -18,11 +19,20 @@ use Symfony\Component\Validator\Exception\ValidatorException;
 
 class RegistrationController extends AbstractController
 {
+    private $logger;
+    private $s3Client;
+
+    public function __construct(LoggerInterface $logger, S3Client $s3Client)
+    {
+        $this->logger = $logger;
+        $this->s3Client = $s3Client;
+    }
+
     /**
      * @Route("/register", name="register", methods={"POST"})
      * @throws Exception
      */
-    public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder, S3Client $s3Client): JsonResponse
+    public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder): JsonResponse
     {
         $entityManager = $this->getDoctrine()->getManager();
         $user = new User;
@@ -45,14 +55,14 @@ class RegistrationController extends AbstractController
                 // Handle avatar file upload
                 $avatarFile = $form->get('avatar')->getData();
                 if ($avatarFile) {
-                    $avatarFileUrl = $this->uploadFileToS3($avatarFile, $s3Client);
+                    $avatarFileUrl = $this->uploadFileToS3($avatarFile);
                     $user->setAvatar($avatarFileUrl['url']);
                 }
 
                 // Handle photos file upload
                 $photoFiles = $form->get('photos')->getData();
                 foreach ($photoFiles as $file) {
-                    $photoFile = $this->uploadFileToS3($file, $s3Client);
+                    $photoFile = $this->uploadFileToS3($file);
 
                     $photo = new Photo;
                     $photo->setName($photoFile['name']);
@@ -74,7 +84,7 @@ class RegistrationController extends AbstractController
 
             return new JsonResponse(['errors' => $errors], Response::HTTP_UNPROCESSABLE_ENTITY);
         } catch (Exception $e) {
-            $this->get('logger')->error('File upload failed: ' . $e->getMessage());
+            $this->logger->error("Error registering user {$request->request->get('email')}: " . $e->getMessage());
             return new JsonResponse(['error' => 'An error occurred during registration'], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -93,7 +103,7 @@ class RegistrationController extends AbstractController
      * @throws Exception If the file upload to S3 fails. This includes network issues,
      *                   file handling errors, or AWS service exceptions.
      */
-    private function uploadFileToS3(UploadedFile $file, S3Client $s3Client): array
+    private function uploadFileToS3(UploadedFile $file): array
     {
         if (! $file->isValid()) {
             throw new ValidatorException('Invalid file upload');
@@ -104,7 +114,7 @@ class RegistrationController extends AbstractController
 
         // Upload to S3
         try {
-            $result = $s3Client->putObject([
+            $result = $this->s3Client->putObject([
                 'Bucket' => $s3Bucket,
                 'Key'    => 'photos/' . $fileName,
                 'Body'   => fopen($file->getPathname(), 'rb'),
@@ -116,7 +126,7 @@ class RegistrationController extends AbstractController
                 'url' => $result->get('ObjectURL') ?? null,
             ];
         } catch (Exception $e) {
-            $this->get('logger')->error('File upload failed: ' . $e->getMessage());
+            $this->logger->error('File upload failed: ' . $e->getMessage());
             throw new Exception("Error uploading file to S3");
         }
     }
