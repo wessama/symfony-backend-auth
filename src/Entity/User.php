@@ -77,7 +77,7 @@ class User extends BaseEntity implements UserInterface
     /**
      * @ORM\OneToMany(targetEntity=Photo::class, mappedBy="user", orphanRemoval=true, cascade={"persist"})
      */
-    private ArrayCollection $photos;
+    private Collection $photos;
 
     /**
      * @ORM\Column(type="boolean")
