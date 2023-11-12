@@ -3,7 +3,6 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
-use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -14,7 +13,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Entity(repositoryClass=UserRepository::class)
  * @ORM\HasLifecycleCallbacks()
  */
-class User implements UserInterface
+class User extends BaseEntity implements UserInterface
 {
     /**
      * @ORM\Id
@@ -25,6 +24,8 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
+     * @Assert\NotBlank
+     * @Assert\Email(strict=true)
      */
     private $email;
 
@@ -34,8 +35,9 @@ class User implements UserInterface
     private $roles = [];
 
     /**
-     * @var string The hashed password
      * @ORM\Column(type="string")
+     * @Assert\NotBlank
+     * @Assert\Length(min=6, max=50)
      */
     private $password;
 
@@ -73,16 +75,6 @@ class User implements UserInterface
      * @ORM\Column(type="boolean")
      */
     private $active;
-
-    /**
-     * @ORM\Column(type="datetime_immutable")
-     */
-    private $createdAt;
-
-    /**
-     * @ORM\Column(type="datetime_immutable", nullable=true)
-     */
-    private $updatedAt;
 
     private const STATUS_ACTIVE = 1;
 
@@ -143,7 +135,7 @@ class User implements UserInterface
     /**
      * @see UserInterface
      */
-    public function getPassword(): string
+    public function getPassword(): ?string
     {
         return $this->password;
     }
@@ -211,6 +203,14 @@ class User implements UserInterface
         return $this;
     }
 
+    /**
+     * @ORM\PrePersist
+     */
+    public function setFullNameValue(): void
+    {
+        $this->fullName = $this->firstName . ' ' . $this->lastName;
+    }
+
     public function getAvatar(): ?string
     {
         return $this->avatar;
@@ -263,31 +263,5 @@ class User implements UserInterface
         $this->active = $active;
 
         return $this;
-    }
-    
-    public function getCreatedAt(): ?DateTimeImmutable
-    {
-        return $this->createdAt;
-    }
-
-    /**
-     * @ORM\PrePersist
-     */
-    public function setCreatedAtValue(): void
-    {
-        $this->createdAt = new DateTimeImmutable();
-    }
-
-    public function getUpdatedAt(): ?DateTimeImmutable
-    {
-        return $this->updatedAt;
-    }
-
-    /**
-     * @ORM\PreUpdate
-     */
-    public function setUpdatedAtValue(): void
-    {
-        $this->updatedAt = new DateTimeImmutable();
     }
 }
