@@ -107,7 +107,7 @@ class RegistrationController extends AbstractController
 
             return [
                 'name' => $fileName,
-                'url' => $result['ObjectURL'] ?? null,
+                'url' => $result->get('ObjectURL') ?? null,
             ];
         } catch (Exception $e) {
             $this->get('logger')->error('File upload failed: ' . $e->getMessage());
