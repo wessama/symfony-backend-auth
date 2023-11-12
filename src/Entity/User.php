@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -268,5 +269,24 @@ class User extends BaseEntity implements UserInterface
         $this->active = $active;
 
         return $this;
+    }
+
+    /**
+     * Convert the user entity to a public data array.
+     *
+     * This array can be returned safely in API responses.
+     */
+    public function toPublicData(): array
+    {
+        return [
+            'id' => $this->getId(),
+            'email' => $this->getEmail(),
+            'firstName' => $this->getFirstName(),
+            'lastName' => $this->getLastName(),
+            'fullName' => $this->getFullName(),
+            'roles' => $this->getRoles(),
+            'createdAt' => $this->getCreatedAt() ? $this->getCreatedAt()->format(DateTimeInterface::ATOM) : null,
+            'updatedAt' => $this->getUpdatedAt() ? $this->getUpdatedAt()->format(DateTimeInterface::ATOM) : null,
+        ];
     }
 }

@@ -2,9 +2,8 @@
 
 namespace App\Controller\Api;
 
+use RuntimeException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class AuthController extends AbstractController
@@ -14,6 +13,7 @@ class AuthController extends AbstractController
      */
     public function login()
     {
-        // Intercepted by the firewall
+        // Intercepted by the firewall and handled automatically
+        throw new RuntimeException('This should never be reached!');
     }
 }

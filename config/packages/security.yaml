@@ -11,13 +11,6 @@ security:
                 class: App\Entity\User
                 property: email
     firewalls:
-        dev:
-            pattern: ^/(_(profiler|wdt)|css|images|js)/
-            security: false
-        main:
-            anonymous: lazy
-            provider: app_user_provider
-
         login:
             pattern: ^/login
             stateless: true
