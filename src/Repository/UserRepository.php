@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\User;
+use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
@@ -62,6 +63,24 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $user->setPassword($newHashedPassword);
         $this->_em->persist($user);
         $this->_em->flush();
+    }
+
+    /**
+     * @return User[]
+     */
+    public function findActiveUsersCreatedWithinThePastWeek(): array
+    {
+        // Get the timestamp one week ago
+        $oneWeekAgo = new DateTime('-1 week');
+
+        $qb = $this->createQueryBuilder('u');
+
+        $query = $qb->where('u.createdAt >= :one_week_ago')
+            ->andWhere('u.active = :active')
+            ->setParameter('one_week_ago', $oneWeekAgo)
+            ->setParameter('active', User::STATUS_ACTIVE);
+
+        return $query->getQuery()->getResult();
     }
 
     // /**
