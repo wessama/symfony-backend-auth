@@ -45,7 +45,7 @@ class User extends BaseEntity implements UserInterface
     /**
      * @ORM\Column(type="string")
      * @Assert\NotBlank
-     * @Assert\Length(min=5, max=50)
+     * @Assert\Length(min=6, max=50)
      * @Assert\Regex(pattern="/\d/", message="Your password must contain at least one number")
      */
     private string $password;
