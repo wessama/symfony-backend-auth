@@ -25,11 +25,17 @@ class RegistrationController extends AbstractController
     public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder, S3Client $s3Client): JsonResponse
     {
         $entityManager = $this->getDoctrine()->getManager();
-        $user = new User();
+        $user = new User;
 
         $form = $this->createForm(RegistrationFormType::class, $user);
-        $data = json_decode($request->getContent(), true);
-        $form->submit($data);
+
+        // Combine file and request data
+        $formData = array_merge(
+            $request->request->all(), // Regular form data
+            ['avatar' => $request->files->get('avatar'), 'photos' => $request->files->get('photos')] // File uploads
+        );
+
+        $form->submit($formData);
 
         try {
             if ($form->isSubmitted() && $form->isValid()) {
@@ -46,11 +52,11 @@ class RegistrationController extends AbstractController
                 // Handle photos file upload
                 $photoFiles = $form->get('photos')->getData();
                 foreach ($photoFiles as $file) {
-                    $photoFileUrl = $this->uploadFileToS3($file, $s3Client);
+                    $photoFile = $this->uploadFileToS3($file, $s3Client);
 
-                    $photo = new Photo();
-                    $photo->setName($photoFileUrl['name']);
-                    $photo->setUrl($photoFileUrl['url']);
+                    $photo = new Photo;
+                    $photo->setName($photoFile['name']);
+                    $photo->setUrl($photoFile['url']);
 
                     $user->addPhoto($photo);
                 }
@@ -93,7 +99,7 @@ class RegistrationController extends AbstractController
             throw new ValidatorException('Invalid file upload');
         }
 
-        $s3Bucket = $this->getParameter('AWS_S3_BUCKET');
+        $s3Bucket = $this->getParameter('aws.s3_bucket');
         $fileName = uniqid() . '-' . $file->getClientOriginalName();
 
         // Upload to S3
