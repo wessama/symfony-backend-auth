@@ -18,7 +18,20 @@ class RegistrationFormType extends AbstractType
     {
         $builder
             ->add('email', EmailType::class)
-            ->add('password', PasswordType::class)
+            ->add('password', PasswordType::class, [
+                'constraints' => [
+                    new Assert\Length([
+                        'min' => 5,
+                        'max' => 50,
+                        'minMessage' => 'Your password must be at least {{ limit }} characters long',
+                        'maxMessage' => 'Your password cannot be longer than {{ limit }} characters',
+                    ]),
+                    new Assert\Regex([
+                        'pattern' => '/\d/',
+                        'message' => 'Your password must contain at least one number',
+                    ]),
+                ],
+            ])
             ->add('firstName')
             ->add('lastName')
             ->add('avatar', FileType::class, [
