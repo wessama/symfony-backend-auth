@@ -19,8 +19,8 @@ use Symfony\Component\Validator\Exception\ValidatorException;
 
 class RegistrationController extends AbstractController
 {
-    private $logger;
-    private $s3Client;
+    private LoggerInterface $logger;
+    private S3Client $s3Client;
 
     public function __construct(LoggerInterface $logger, S3Client $s3Client)
     {
