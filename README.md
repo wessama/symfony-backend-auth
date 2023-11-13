@@ -103,6 +103,11 @@ You will also need to update `.env.local` with AWS S3 credentials for user avata
 
 Locally, testing was done using [minio](https://min.io/), an open-source S3-compatible object storage server. You can use minio to test the API locally, or you can use the S3 bucket provided by the task.
 
+```
+A note on the S3 bucket: in a production environment, I'd rather set up a queue worker and a message queue to handle the photo uploads. However, since this is a simple API, I've decided to upload the photos directly to the S3 bucket which means 
+the request will take longer to complete. Since Symfony doesn't have a native queue driver and this would add significant complexity to the task, I've decided to leave this part out.
+```
+
 ```dotenv
 AWS_S3_BUCKET="bucket-name"
 AWS_S3_REGION="bucket-region"
