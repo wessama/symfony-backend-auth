@@ -92,14 +92,13 @@ class RegistrationController extends AbstractController
     /**
      * Uploads a file to AWS S3.
      *
-     * @param UploadedFile $file The file to be uploaded.
-     * @param S3Client     $s3Client The AWS S3 client for handling the upload.
+     * TODO: Turn this into an async job to avoid blocking the request.
      *
+     * @param UploadedFile $file The file to be uploaded.
      * @return array<string, string> Returns an associative array containing:
      *                               - 'name': The name of the uploaded file.
      *                               - 'url': The publicly accessible URL of the file on S3.
      *
-     * @throws ValidatorException If the file upload is invalid.
      * @throws Exception If the file upload to S3 fails. This includes network issues,
      *                   file handling errors, or AWS service exceptions.
      */

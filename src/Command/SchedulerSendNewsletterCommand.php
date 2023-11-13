@@ -47,6 +47,7 @@ class SchedulerSendNewsletterCommand extends Command
         $progressBar->start();
 
         foreach ($users as $user) {
+            // I'd rather use a localized e-mail template here but this will do for the sake of simplicity
             $email = (new Email())
                 ->to($user->getEmail())
                 ->subject('Your best newsletter')
