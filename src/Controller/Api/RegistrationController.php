@@ -55,18 +55,18 @@ class RegistrationController extends AbstractController
                 // Handle avatar file upload
                 $avatarFile = $form->get('avatar')->getData();
                 if ($avatarFile) {
-                    $avatarFileUrl = $this->uploadFileToS3($avatarFile);
-                    $user->setAvatar($avatarFileUrl['url']);
+                    $avatarFileInS3 = $this->uploadFileToS3($avatarFile);
+                    $user->setAvatar($avatarFileInS3['url']);
                 }
 
                 // Handle photos file upload
                 $photoFiles = $form->get('photos')->getData();
                 foreach ($photoFiles as $file) {
-                    $photoFile = $this->uploadFileToS3($file);
+                    $photoFileInS3 = $this->uploadFileToS3($file);
 
                     $photo = new Photo;
-                    $photo->setName($photoFile['name']);
-                    $photo->setUrl($photoFile['url']);
+                    $photo->setName($photoFileInS3['name']);
+                    $photo->setUrl($photoFileInS3['url']);
 
                     $user->addPhoto($photo);
                 }
