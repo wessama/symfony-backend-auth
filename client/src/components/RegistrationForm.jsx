@@ -1,6 +1,6 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import { useForm, Controller } from 'react-hook-form';
-import { Button, TextField, makeStyles } from '@material-ui/core';
+import {Button, TextField, makeStyles, FormControl, InputLabel, Typography} from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
     form: {
@@ -8,11 +8,29 @@ const useStyles = makeStyles((theme) => ({
         flexDirection: 'column',
         gap: theme.spacing(2),
     },
+    fileNames: {
+        marginTop: theme.spacing(2),
+    },
 }));
 
 function RegistrationForm() {
     const classes = useStyles();
-    const { control, handleSubmit, formState: { errors } } = useForm();
+    const { control, handleSubmit, register, setValue, formState: { errors } } = useForm();
+
+    useEffect(() => {
+        register('avatars'); // Register the file input field
+    }, [register]);
+
+    const [fileNames, setFileNames] = useState([]);
+
+    const handleFileChange = (event) => {
+        const files = Array.from(event.target.files);
+        setValue('photos', files);
+
+        // Extract and set file names
+        const fileNames = files.map(file => file.name);
+        setFileNames(fileNames);
+    };
 
     const onSubmit = (data) => {
         console.log(data);
@@ -52,8 +70,46 @@ function RegistrationForm() {
                     />
                 )}
             />
-            <input type="file" name="avatar" />
-            {/* You can also integrate file inputs with React Hook Form */}
+
+            <Typography variant="body1" className={classes.fileInput}>
+                Upload Avatar:
+            </Typography>
+            <Button
+                variant="contained"
+                component="label"
+            >
+                Choose Files
+                <input
+                    type="file"
+                    hidden
+                />
+            </Button>
+
+            <Typography variant="body1" className={classes.fileInput}>
+                Upload Photos:
+            </Typography>
+            <Button
+                variant="contained"
+                component="label"
+            >
+                Choose Files
+                <input
+                    type="file"
+                    multiple
+                    hidden
+                    onChange={handleFileChange}
+                />
+            </Button>
+            {fileNames.length > 0 && (
+                <div className={classes.fileNames}>
+                    {fileNames.map((name, index) => (
+                        <Typography key={index} variant="body2">
+                            {name}
+                        </Typography>
+                    ))}
+                </div>
+            )}
+
             <Button type="submit" variant="contained" color="primary">
                 Register
             </Button>
