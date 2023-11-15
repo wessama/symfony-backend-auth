@@ -1,18 +1,17 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import RegistrationForm from './components/RegistrationForm';
 import LoginForm from './components/LoginForm';
-import HomePage from './components/HomePage';
 
 function App() {
-  return (
-      <Router>
-        <Switch>
-          <Route path="/register" component={RegistrationForm} />
-          <Route path="/login" component={LoginForm} />
-        </Switch>
-      </Router>
-  );
+    return (
+        <Router>
+            <Routes>
+                <Route path="/register" element={<RegistrationForm />} />
+                <Route path="/login" element={<LoginForm />} />
+            </Routes>
+        </Router>
+    );
 }
 
 export default App;
