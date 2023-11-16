@@ -18,19 +18,30 @@ function RegistrationForm() {
     const { control, handleSubmit, register, setValue, formState: { errors } } = useForm();
 
     useEffect(() => {
-        register('avatars'); // Register the file input field
+        register('avatar');
+        register('photos', { required: 'At least one photo is required' });
     }, [register]);
 
-    const [fileNames, setFileNames] = useState([]);
+    const [photoFileNames, setPhotoFileNames] = useState([]);
 
-    const handleFileChange = (event) => {
+    const [avatarFileName, setAvatarFileName] = useState('');
+
+    const handlePhotoFiles = (event) => {
         const files = Array.from(event.target.files);
-        setValue('photos', files);
+        setValue('photos', files, { shouldValidate: true });
 
         // Extract and set file names
         const fileNames = files.map(file => file.name);
-        setFileNames(fileNames);
+        setPhotoFileNames(fileNames);
     };
+
+    const handleAvatarFile = (event) => {
+        const file = event.target.files[0];
+        if (file) {
+            setValue('avatar', file);
+            setAvatarFileName(file.name);
+        }
+    }
 
     const onSubmit = (data) => {
         console.log(data);
@@ -70,6 +81,38 @@ function RegistrationForm() {
                     />
                 )}
             />
+            <Controller
+                name="firstName"
+                control={control}
+                defaultValue=""
+                rules={{ required: 'First name is required' }}
+                render={({ field }) => (
+                    <TextField
+                        {...field}
+                        label="First Name"
+                        type="text"
+                        variant="outlined"
+                        error={!!errors.firstName}
+                        helperText={errors.firstName?.message}
+                    />
+                )}
+            />
+            <Controller
+                name="lastName"
+                control={control}
+                defaultValue=""
+                rules={{ required: 'Last name is required' }}
+                render={({ field }) => (
+                    <TextField
+                        {...field}
+                        label="Last Name"
+                        type="text"
+                        variant="outlined"
+                        error={!!errors.lastName}
+                        helperText={errors.lastName?.message}
+                    />
+                )}
+            />
 
             <Typography variant="body1" className={classes.fileInput}>
                 Upload Avatar:
@@ -78,16 +121,27 @@ function RegistrationForm() {
                 variant="contained"
                 component="label"
             >
-                Choose Files
+                Choose File
                 <input
                     type="file"
                     hidden
+                    onChange={handleAvatarFile}
                 />
             </Button>
+            {avatarFileName && (
+                <Typography variant="body2" className={classes.fileName}>
+                    {avatarFileName}
+                </Typography>
+            )}
 
             <Typography variant="body1" className={classes.fileInput}>
                 Upload Photos:
             </Typography>
+            {errors.photos && (
+                <Typography color="error" variant="body2">
+                    {errors.photos.message}
+                </Typography>
+            )}
             <Button
                 variant="contained"
                 component="label"
@@ -97,12 +151,12 @@ function RegistrationForm() {
                     type="file"
                     multiple
                     hidden
-                    onChange={handleFileChange}
+                    onChange={handlePhotoFiles}
                 />
             </Button>
-            {fileNames.length > 0 && (
+            {photoFileNames.length > 0 && (
                 <div className={classes.fileNames}>
-                    {fileNames.map((name, index) => (
+                    {photoFileNames.map((name, index) => (
                         <Typography key={index} variant="body2">
                             {name}
                         </Typography>
