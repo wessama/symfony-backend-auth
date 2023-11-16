@@ -22,7 +22,7 @@ const FileInput = ({ control, setValue, register, name, label, multiple, accepte
         <div>
             <Typography variant="body1">{label}:</Typography>
             <Button variant="contained" component="label">
-                Choose File(s)
+                { multiple ? 'Choose Files' : 'Choose File'}
                 <input
                     type="file"
                     hidden
