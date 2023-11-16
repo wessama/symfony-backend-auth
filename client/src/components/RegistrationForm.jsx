@@ -65,6 +65,7 @@ function RegistrationForm() {
 
             const response = await axios.post(ENDPOINTS.REGISTER, formData);
             if (response.status === 201) {
+                // Dispatch action to indicate user has just registered
                 dispatch(registerSuccess());
                 navigate('/success');
             }

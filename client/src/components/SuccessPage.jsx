@@ -1,11 +1,12 @@
 import React, { useEffect, useRef } from 'react';
 import lottie from 'lottie-web';
 import Confetti from 'react-confetti';
-import { useNavigate } from 'react-router-dom';
 import successAnimation from '../assets/animations/success-animation.json';
+import {useDispatch} from "react-redux";
+import {resetRegister} from "../actions/registrationActions";
 
 const SuccessPage = () => {
-    const navigate = useNavigate();
+    const dispatch = useDispatch();
     const animationContainer = useRef(null);
 
     useEffect(() => {
@@ -18,14 +19,14 @@ const SuccessPage = () => {
         });
 
         const timer = setTimeout(() => {
-            navigate('/login');
+            dispatch(resetRegister());
         }, 5000);
 
         return () => {
             clearTimeout(timer);
             anim.destroy();
         };
-    }, [navigate]);
+    }, [dispatch]);
 
     return (
         <div style={{ position: 'relative', height: '100vh', width: '100vw' }}>
