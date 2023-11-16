@@ -8,6 +8,12 @@ const rootReducer = combineReducers({
     // Other reducers
 });
 
-const store = createStore(rootReducer);
+const persistedState = {
+    auth: {
+        token: localStorage.getItem('jwtToken')
+    }
+};
+
+const store = createStore(rootReducer, persistedState);
 
 export default store;

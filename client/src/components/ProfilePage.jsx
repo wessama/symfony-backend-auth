@@ -6,11 +6,7 @@ const ProfilePage = () => {
     const token = useSelector(state => state.auth.token);
     const navigate = useNavigate();
 
-    React.useEffect(() => {
-        if (!token) {
-            navigate('/login');
-        }
-    }, [token, navigate]);
+    console.log(token);
 
     return <div>Profile Page</div>;
 };
