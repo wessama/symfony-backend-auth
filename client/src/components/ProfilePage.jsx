@@ -1,14 +1,91 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 import { useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { CircularProgress, makeStyles } from '@material-ui/core';
+import Slider from 'react-slick';
+import { ENDPOINTS } from '../config/apiConfig';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
 
-const ProfilePage = () => {
-    const token = useSelector(state => state.auth.token);
-    const navigate = useNavigate();
+const useStyles = makeStyles((theme) => ({
+    profileContainer: {
+        display: 'flex',
+        alignItems: 'center',
+        flexDirection: 'column',
+        padding: theme.spacing(4),
+    },
+    avatar: {
+        width: '150px',
+        height: '150px',
+        borderRadius: '50%',
+        objectFit: 'cover',
+    },
+    carouselContainer: {
+        width: '80%',
+        marginTop: theme.spacing(4),
+        marginBottom: theme.spacing(4),
+    },
+    carouselImage: {
+        width: '100%',
+        height: 'auto',
+    },
+}));
 
-    console.log(token);
+function ProfilePage() {
+    const classes = useStyles();
+    const token = useSelector((state) => state.auth.token);
+    const [userData, setUserData] = useState(null);
+    const [loading, setLoading] = useState(false);
 
-    return <div>Profile Page</div>;
-};
+    useEffect(() => {
+        const fetchData = async () => {
+            setLoading(true);
+            try {
+                const response = await axios.get(ENDPOINTS.ME, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+                setUserData(response.data);
+            } catch (error) {
+                console.error('Error fetching user data:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchData().then(r => r);
+    }, [token]);
+
+    const settings = {
+        dots: true,
+        infinite: true,
+        speed: 500,
+        slidesToShow: 3,
+        slidesToScroll: 1,
+    };
+
+    if (loading) {
+        return <CircularProgress />;
+    }
+
+    return (
+        <div className={classes.profileContainer}>
+            {userData && (
+                <>
+                    <img src={userData.avatar} alt="Avatar" className={classes.avatar} />
+                    <h2>{userData.fullName}</h2>
+                    <Slider {...settings} className={classes.carouselContainer}>
+                        {userData.photos.map(photo => (
+                            <div key={photo.id}>
+                                <img src={photo.url} alt={photo.name} className={classes.carouselImage} />
+                            </div>
+                        ))}
+                    </Slider>
+                </>
+            )}
+        </div>
+    );
+}
 
 export default ProfilePage;
