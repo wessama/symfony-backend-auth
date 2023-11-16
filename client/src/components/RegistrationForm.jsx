@@ -65,7 +65,6 @@ function RegistrationForm() {
             }
         } catch (error) {
             if (error.response && error.response.status === 422) {
-                console.log(error.response);
                 // Set errors for each field
                 Object.entries(error.response.data.errors).forEach(([key, value]) => {
                     setError(key, { type: 'manual', message: value });
