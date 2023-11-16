@@ -1,9 +1,8 @@
-import { useSelector } from 'react-redux';
-import { Navigate } from 'react-router-dom';
+import {useSelector} from 'react-redux';
+import {Navigate} from 'react-router-dom';
 
 const AuthGuard = ({ children, type }) => {
-    const token = useSelector(state => state.auth.token);
-    const isAuthenticated = !!token;
+    const isAuthenticated = useSelector(state => state.auth.token);
 
     if (type === 'guest' && isAuthenticated) {
         return <Navigate to="/profile" />;
