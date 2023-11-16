@@ -1,8 +1,10 @@
-import React, { useEffect } from 'react';
+import React, {useEffect, useState} from 'react';
 import { useForm } from 'react-hook-form';
-import { Button, makeStyles } from '@material-ui/core';
+import {Button, CircularProgress, makeStyles} from '@material-ui/core';
+import { ENDPOINTS } from '../config/apiConfig';
 import FormField from '../Fields/FormField';
 import FileInput from "../Fields/FileInput";
+import axios from "axios";
 
 const useStyles = makeStyles((theme) => ({
     form: {
@@ -29,16 +31,49 @@ const useStyles = makeStyles((theme) => ({
 
 function RegistrationForm() {
     const classes = useStyles();
-    const { control, handleSubmit, register, setValue, formState: { errors } } = useForm({ mode: 'onBlur' });
+    const { control, handleSubmit, setError, register, setValue, formState: { errors, isSubmitting } } = useForm({ mode: 'onBlur' });
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         register('avatar');
         register('photos', { required: 'At least one photo is required' });
     }, [register]);
 
-    const onSubmit = (data) => {
-        console.log(data);
-        // Registration logic goes here
+    const onSubmit = async (data) => {
+        setLoading(true);
+        try {
+            const formData = new FormData();
+            // Append form data
+            formData.append('email', data.email);
+            formData.append('password', data.password);
+            formData.append('firstName', data.firstName);
+            formData.append('lastName', data.lastName);
+            // For files
+            if (data.avatar) {
+                formData.append('avatar', data.avatar[0]);
+            }
+            if (data.photos) {
+                data.photos.forEach(photo => {
+                    formData.append('photos[]', photo);
+                });
+            }
+
+            const response = await axios.post(ENDPOINTS.REGISTER, formData);
+            if (response.status === 201) {
+                console.log(response);
+                // Redirect on success
+            }
+        } catch (error) {
+            if (error.response && error.response.status === 422) {
+                console.log(error.response);
+                // Set errors for each field
+                Object.entries(error.response.data.errors).forEach(([key, value]) => {
+                    setError(key, { type: 'manual', message: value });
+                });
+            }
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
@@ -100,8 +135,8 @@ function RegistrationForm() {
                 maxFileSize={5000000} // 5MB
                 error={errors.photos?.message}
             />
-            <Button type="submit" variant="contained" color="primary">
-                Register
+            <Button type="submit" variant="contained" color="primary" disabled={loading}>
+                {loading ? <CircularProgress size={24} /> : 'Register'}
             </Button>
         </form>
     );
