@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
 import { CircularProgress, makeStyles } from '@material-ui/core';
+import LogoutButton from './partials/LogoutButton';
 import Slider from 'react-slick';
 import { ENDPOINTS } from '../config/apiConfig';
 import 'slick-carousel/slick/slick.css';
@@ -62,7 +63,7 @@ function ProfilePage() {
         infinite: true,
         speed: 500,
         slidesToShow: 3,
-        slidesToScroll: 1,
+        slidesToScroll: 1
     };
 
     if (loading) {
@@ -75,6 +76,7 @@ function ProfilePage() {
                 <>
                     <img src={userData.avatar} alt="Avatar" className={classes.avatar} />
                     <h2>{userData.fullName}</h2>
+                    <LogoutButton />
                     <Slider {...settings} className={classes.carouselContainer}>
                         {userData.photos.map(photo => (
                             <div key={photo.id}>
