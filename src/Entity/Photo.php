@@ -74,4 +74,13 @@ class Photo extends BaseEntity
 
         return $this;
     }
+
+    public function toPublicData(): array
+    {
+        return [
+            'id' => $this->getId(),
+            'name' => $this->getName(),
+            'url' => $this->getUrl(),
+        ];
+    }
 }

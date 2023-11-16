@@ -292,6 +292,11 @@ class User extends BaseEntity implements UserInterface
      */
     public function toPublicData(): array
     {
+        $photos = [];
+        foreach ($this->getPhotos() as $photo) {
+            $photos[] = $photo->toPublicData();
+        }
+
         return [
             'id' => $this->getId(),
             'email' => $this->getEmail(),
@@ -299,6 +304,9 @@ class User extends BaseEntity implements UserInterface
             'lastName' => $this->getLastName(),
             'fullName' => $this->getFullName(),
             'roles' => $this->getRoles(),
+            'avatar' => $this->getAvatar(),
+            'active' => $this->getActive(),
+            'photos' => $photos,
             'createdAt' => $this->getCreatedAt() ? $this->getCreatedAt()->format(DateTimeInterface::ATOM) : null,
             'updatedAt' => $this->getUpdatedAt() ? $this->getUpdatedAt()->format(DateTimeInterface::ATOM) : null,
         ];
