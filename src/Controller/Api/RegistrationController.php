@@ -79,7 +79,7 @@ class RegistrationController extends AbstractController
 
             $errors = [];
             foreach ($form->getErrors(true) as $error) {
-                $errors[] = $error->getMessage();
+                $errors[$error->getOrigin()->getName()] = $error->getMessage();
             }
 
             return new JsonResponse(['errors' => $errors], Response::HTTP_UNPROCESSABLE_ENTITY);
