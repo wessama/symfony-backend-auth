@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
 import {Button, CircularProgress, makeStyles} from '@material-ui/core';
 import { ENDPOINTS } from '../config/apiConfig';
 import FormField from '../Fields/FormField';
@@ -31,7 +32,8 @@ const useStyles = makeStyles((theme) => ({
 
 function RegistrationForm() {
     const classes = useStyles();
-    const { control, handleSubmit, setError, register, setValue, formState: { errors, isSubmitting } } = useForm({ mode: 'onBlur' });
+    const navigate = useNavigate();
+    const { control, handleSubmit, setError, register, setValue, formState: { errors } } = useForm({ mode: 'onBlur' });
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
@@ -60,8 +62,7 @@ function RegistrationForm() {
 
             const response = await axios.post(ENDPOINTS.REGISTER, formData);
             if (response.status === 201) {
-                console.log(response);
-                // Redirect on success
+                navigate('/success');
             }
         } catch (error) {
             if (error.response && error.response.status === 422) {
