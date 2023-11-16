@@ -3,8 +3,10 @@ import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import {Button, CircularProgress, makeStyles} from '@material-ui/core';
 import { ENDPOINTS } from '../config/apiConfig';
-import FormField from '../Fields/FormField';
-import FileInput from "../Fields/FileInput";
+import FormField from '../fields/FormField';
+import FileInput from "../fields/FileInput";
+import { useDispatch } from 'react-redux';
+import { registerSuccess } from '../actions/registrationActions';
 import axios from "axios";
 
 const useStyles = makeStyles((theme) => ({
@@ -33,6 +35,7 @@ const useStyles = makeStyles((theme) => ({
 function RegistrationForm() {
     const classes = useStyles();
     const navigate = useNavigate();
+    const dispatch = useDispatch();
     const { control, handleSubmit, setError, register, setValue, formState: { errors } } = useForm({ mode: 'onBlur' });
     const [loading, setLoading] = useState(false);
 
@@ -62,6 +65,7 @@ function RegistrationForm() {
 
             const response = await axios.post(ENDPOINTS.REGISTER, formData);
             if (response.status === 201) {
+                dispatch(registerSuccess());
                 navigate('/success');
             }
         } catch (error) {

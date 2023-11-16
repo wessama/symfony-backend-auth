@@ -1,7 +1,7 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { Button, makeStyles } from '@material-ui/core';
-import FormField from '../Fields/FormField';
+import FormField from '../fields/FormField';
 
 const useStyles = makeStyles((theme) => ({
     form: {
