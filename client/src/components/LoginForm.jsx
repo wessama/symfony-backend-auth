@@ -29,7 +29,7 @@ function LoginForm() {
             const response = await axios.post(ENDPOINTS.LOGIN, data);
             if (response.status === 200) {
                 const token = response.data.token;
-                localStorage.setItem('jwtToken', token);
+
                 dispatch(loginSuccess(token));
             }
         } catch (error) {

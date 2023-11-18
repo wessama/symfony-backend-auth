@@ -7,9 +7,6 @@ const LogoutButton = () => {
     const dispatch = useDispatch();
 
     const handleLogout = () => {
-        // Clear the JWT token from localStorage
-        localStorage.removeItem('jwtToken');
-
         // Dispatch the logout action
         dispatch(logout());
     };

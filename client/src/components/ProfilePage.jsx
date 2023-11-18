@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { useSelector } from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import { CircularProgress, makeStyles } from '@material-ui/core';
 import LogoutButton from './partials/LogoutButton';
 import Slider from 'react-slick';
 import { ENDPOINTS } from '../config/apiConfig';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
+import {logout} from "../actions/authActions";
 
 const useStyles = makeStyles((theme) => ({
     profileContainer: {
@@ -35,6 +36,7 @@ const useStyles = makeStyles((theme) => ({
 function ProfilePage() {
     const classes = useStyles();
     const token = useSelector((state) => state.auth.token);
+    const dispatch = useDispatch();
     const [userData, setUserData] = useState(null);
     const [loading, setLoading] = useState(false);
 
@@ -49,7 +51,9 @@ function ProfilePage() {
                 });
                 setUserData(response.data);
             } catch (error) {
-                console.error('Error fetching user data:', error);
+                if (error.response.status === 401) {
+                    dispatch(logout());
+                }
             } finally {
                 setLoading(false);
             }
