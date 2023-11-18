@@ -10,7 +10,7 @@ const rootReducer = combineReducers({
 
 const persistedState = {
     auth: {
-        token: localStorage.getItem('jwtToken')
+        token: localStorage.getItem('jwtToken') || null
     }
 };
 
