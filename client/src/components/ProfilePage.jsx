@@ -60,7 +60,7 @@ function ProfilePage() {
         };
 
         fetchData().then(r => r);
-    }, [token]);
+    }, [token, dispatch]);
 
     const settings = {
         dots: true,
