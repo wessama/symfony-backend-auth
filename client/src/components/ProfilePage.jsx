@@ -27,9 +27,14 @@ const useStyles = makeStyles((theme) => ({
         marginTop: theme.spacing(4),
         marginBottom: theme.spacing(4),
     },
+    carouselSlide: {
+        padding: theme.spacing(1),
+        textAlign: 'center',
+    },
     carouselImage: {
-        width: '100%',
-        height: 'auto',
+        maxWidth: '100%',
+        maxHeight: '500px',
+        objectFit: 'contain',
     },
 }));
 
@@ -67,8 +72,8 @@ function ProfilePage() {
         dots: true,
         infinite: true,
         speed: 500,
-        slidesToShow: 3,
-        slidesToScroll: 1
+        slidesToShow: 1,
+        slidesToScroll: 1,
     };
 
     if (loading) {
@@ -83,8 +88,8 @@ function ProfilePage() {
                     <h2>{userData.fullName}</h2>
                     <LogoutButton />
                     <Slider {...settings} className={classes.carouselContainer}>
-                        {userData.photos.map(photo => (
-                            <div key={photo.id}>
+                        {userData.photos.map((photo) => (
+                            <div key={photo.id} className={classes.carouselSlide}>
                                 <img src={photo.url} alt={photo.name} className={classes.carouselImage} />
                             </div>
                         ))}
