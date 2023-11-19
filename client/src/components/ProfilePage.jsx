@@ -51,6 +51,7 @@ function ProfilePage() {
                 });
                 setUserData(response.data);
             } catch (error) {
+                // If token is invalid, dispatch logout action
                 if (error.response.status === 401) {
                     dispatch(logout());
                 }
