@@ -17,11 +17,7 @@ function App() {
                     <Route path="/register" element={<AuthGuard type="guest"><RegistrationForm /></AuthGuard>} />
                     <Route path="/login" element={<AuthGuard type="guest"><LoginForm /></AuthGuard>} />
                     <Route path="/profile" element={<AuthGuard type="private"><ProfilePage /></AuthGuard>} />
-                    <Route path="/success" element={
-                        <ProtectedRoute>
-                            <SuccessPage />
-                        </ProtectedRoute>
-                    } />
+                    <Route path="/success" element={<ProtectedRoute><SuccessPage /></ProtectedRoute>} />
                 </Routes>
             </Router>
         </Provider>
