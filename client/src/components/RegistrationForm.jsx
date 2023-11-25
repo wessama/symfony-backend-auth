@@ -100,7 +100,7 @@ function RegistrationForm() {
                             control={control}
                             name="email"
                             label="Email"
-                            rules={{required: 'Email is required'}}
+                            rules={{required: 'Email is required' }}
                             error={errors.email}
                             helperText={errors.email?.message}
                         />
@@ -118,7 +118,7 @@ function RegistrationForm() {
                             name="firstName"
                             label="First Name"
                             type="text"
-                            rules={{required: 'First name is required'}}
+                            rules={{required: 'First name is required', minLength: {value: 2, message: 'You need to enter a minimum of 2 characters'}, maxLength: {value: 25, message: 'You need to enter a maximum of 25 characters'}}}
                             error={errors.firstName}
                             helperText={errors.firstName?.message}
                         />
@@ -127,7 +127,7 @@ function RegistrationForm() {
                             name="lastName"
                             label="Last Name"
                             type="text"
-                            rules={{required: 'Last name is required'}}
+                            rules={{required: 'Last name is required', minLength: {value: 2, message: 'You need to enter a minimum of 2 characters'}, maxLength: {value: 25, message: 'You need to enter a maximum of 25 characters'}}}
                             error={errors.lastName}
                             helperText={errors.lastName?.message}
                         />
