@@ -80,7 +80,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             ->setParameter('one_week_ago', $oneWeekAgo)
             ->setParameter('active', User::STATUS_ACTIVE);
 
-        return $query->getQuery()->getResult();
+        return $query->getQuery()->getArrayResult();
     }
 
     // /**
