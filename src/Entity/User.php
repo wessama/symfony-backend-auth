@@ -11,6 +11,8 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Asset\Package;
 use Symfony\Component\Asset\VersionStrategy\EmptyVersionStrategy;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Annotation\SerializedName;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -34,6 +36,7 @@ class User extends BaseEntity implements UserInterface
      * @ORM\Column(type="string", length=180, unique=true)
      * @Assert\NotBlank
      * @Assert\Email
+     * @Groups({"user:read"})
      */
     private string $email;
 
@@ -54,6 +57,7 @@ class User extends BaseEntity implements UserInterface
      * @ORM\Column(type="string", length=25)
      * @Assert\NotBlank
      * @Assert\Length(min=2, max=25)
+     * @Groups({"user:read"})
      */
     private string $firstName;
 
@@ -61,11 +65,13 @@ class User extends BaseEntity implements UserInterface
      * @ORM\Column(type="string", length=25)
      * @Assert\NotBlank
      * @Assert\Length(min=2, max=25)
+     * @Groups({"user:read"})
      */
     private string $lastName;
 
     /**
      * @ORM\Column(type="string", length=55)
+     * @Groups({"user:read"})
      */
     private string $fullName;
 
