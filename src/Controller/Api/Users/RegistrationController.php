@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller\Api;
+namespace App\Controller\Api\Users;
 
 use App\Entity\Photo;
 use App\Entity\User;
@@ -15,6 +15,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\Serializer\Exception\ExceptionInterface;
+use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Exception\ValidatorException;
 
 class RegistrationController extends AbstractController
@@ -32,7 +34,7 @@ class RegistrationController extends AbstractController
      * @Route("/register", name="register", methods={"POST"})
      * @throws Exception
      */
-    public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder): JsonResponse
+    public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder, SerializerInterface $serializer): JsonResponse
     {
         $entityManager = $this->getDoctrine()->getManager();
         $user = new User;
@@ -74,7 +76,14 @@ class RegistrationController extends AbstractController
                 // Persist the user and by consequence the photos collection
                 $entityManager->getRepository(User::class)->add($user);
 
-                return new JsonResponse(['status' => 'User registered successfully'], Response::HTTP_CREATED);
+                $userData = $serializer->normalize($user, null, ['groups' => ['user:read']]);
+
+                return new JsonResponse([
+                    'data' => [
+                        'message' => 'User registered successfully',
+                        'user_data' => $userData,
+                    ]
+                ], Response::HTTP_CREATED);
             }
 
             $errors = [];
@@ -83,7 +92,7 @@ class RegistrationController extends AbstractController
             }
 
             return new JsonResponse(['errors' => $errors], Response::HTTP_UNPROCESSABLE_ENTITY);
-        } catch (Exception $e) {
+        } catch (ExceptionInterface $e) {
             $this->logger->error("Error registering user {$request->request->get('email')}: " . $e->getMessage());
             return new JsonResponse(['error' => 'An error occurred during registration'], Response::HTTP_INTERNAL_SERVER_ERROR);
         }

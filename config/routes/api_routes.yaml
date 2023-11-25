@@ -1,4 +1,7 @@
-api:
-  resource: '../../src/Controller/Api/'
+api_login_check:
+  path: /api/users/login
+
+users_api:
+  resource: '../../src/Controller/Api/Users'
   type: annotation
-  prefix: '/api'
+  prefix: '/api/users'
