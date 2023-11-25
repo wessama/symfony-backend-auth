@@ -49,7 +49,7 @@ class SchedulerSendNewsletterCommand extends Command
         foreach ($users as $user) {
             // I'd rather use a localized e-mail template here but this will do for the sake of simplicity
             $email = (new Email())
-                ->to($user->getEmail())
+                ->to($user['email'])
                 ->subject('Your best newsletter')
                 ->text("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec id interdum nibh. Phasellus blandit tortor in cursus convallis. Praesent et tellus fermentum, pellentesque lectus at, tincidunt risus. Quisque in nisl malesuada, aliquet nibh at, molestie libero.");
 
