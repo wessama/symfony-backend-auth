@@ -11,14 +11,14 @@ services:
       - "9000:9000"
     environment:
       DATABASE_URL: "mysql://root:root@database:3306/symfony_master?serverVersion=8&charset=utf8mb4"
-      AWS_S3_BUCKET: "cw-recruitment-tests"
-      AWS_S3_REGION: "eu-west-1"
-      AWS_KEY: "AKIA4TBHNXI5MRYR4B7P"
-      AWS_SECRET: "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"
+      AWS_S3_BUCKET: ""
+      AWS_S3_REGION: ""
+      AWS_KEY: ""
+      AWS_SECRET: ""
       JWT_SECRET_KEY: "/var/www/config/jwt/private.pem"
       JWT_PUBLIC_KEY: "/var/www/config/jwt/public.pem"
       JWT_PASSPHRASE: "password"
-      MAILER_FROM_EMAIL: "newsletter@cobbleweb.co.uk"
+      MAILER_FROM_EMAIL: "newsletter@example.com"
       MAILER_DSN: "null://null"
       CORS_ALLOW_ORIGIN: '^https?://(localhost|127\.0\.0\.1)(:[0-9]+)?$'
     depends_on:
